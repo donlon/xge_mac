@@ -35,17 +35,12 @@
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
 #include <iostream>
-#include <sys/times.h>
-#include <sys/stat.h>
-
-#include "systemc.h"
 
 #include "sc_cpu_if.h"
 
 void cpu_if::init() {
-};
+}
 
 void cpu_if::connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid) {
     sb = sbptr;
@@ -56,28 +51,28 @@ void cpu_if::set_param(cpu_if::paramId param, int value) {
 
     switch (param) {
 
-      case TX_ENABLE:
-          writebits(cpu_if::CPUREG_CONFIG0, 0, 0, value);
-          break;
+        case TX_ENABLE:
+            writebits(cpu_if::CPUREG_CONFIG0, 0, 0, value);
+            break;
 
     }
 
-};
+}
 
 void cpu_if::set_interrupt(cpu_if::intId intr) {
 
     writebits(cpu_if::CPUREG_INT_PENDING, intr, intr, 1);
-};
+}
 
 void cpu_if::set_interrupt_mask(cpu_if::intId intr, bool value) {
 
     writebits(cpu_if::CPUREG_INT_MASK, intr, intr, value);
-};
+}
 
 void cpu_if::enable_all_interrupts(void) {
 
     write(cpu_if::CPUREG_INT_MASK, 0xffffffff);
-};
+}
 
 void cpu_if::get_rmon_stats(rmonStats_t *rmon_stats) {
 
@@ -86,7 +81,7 @@ void cpu_if::get_rmon_stats(rmonStats_t *rmon_stats) {
 
     rmon_stats->rx_octets_cnt = read(cpu_if::CPUREG_STATSRXOCTETS);
     rmon_stats->rx_pkt_cnt = read(cpu_if::CPUREG_STATSRXPKTS);
-};
+}
 
 uint cpu_if::read(uint addr) {
 
@@ -113,7 +108,7 @@ uint cpu_if::read(uint addr) {
     bus_lock.unlock();
 
     return data;
-};
+}
 
 void cpu_if::write(uint addr, uint data) {
 
@@ -136,20 +131,20 @@ void cpu_if::write(uint addr, uint data) {
 
     cout << hex << "WRITE ADDR 0x" << addr << ": 0x" << data << dec << endl;
     bus_lock.unlock();
-};
+}
 
 void cpu_if::writebits(uint addr, uint hbit, uint lbit, uint value) {
 
     uint data;
     uint mask;
 
-    mask = ~((0xffffffff << lbit) & (0xffffffff >> (31-lbit)));
+    mask = ~((0xffffffff << lbit) & (0xffffffff >> (31 - lbit)));
 
     data = mask & read(addr);
     data = data | ((value << lbit) & ~mask);
 
     write(addr, data);
-};
+}
 
 void cpu_if::transactor() {
 
@@ -188,8 +183,7 @@ void cpu_if::transactor() {
             wb_cyc_i = 0;
             wb_stb_i = 0;
 
-        }
-        else {
+        } else {
 
             //---
             // Write access
@@ -219,7 +213,7 @@ void cpu_if::transactor() {
 
         bus_done.post();
     }
-};
+}
 
 void cpu_if::monitor() {
 
@@ -246,11 +240,11 @@ void cpu_if::monitor() {
             }
 
             if ((data >> cpu_if::INT_FRAGMENT_ERROR) & 0x1) {
-               sb->notify_status(sb_id, scoreboard::FRAGMENT_ERROR);
+                sb->notify_status(sb_id, scoreboard::FRAGMENT_ERROR);
             }
 
             if ((data >> cpu_if::INT_LENGHT_ERROR) & 0x1) {
-               sb->notify_status(sb_id, scoreboard::LENGHT_ERROR);
+                sb->notify_status(sb_id, scoreboard::LENGHT_ERROR);
             }
 
             if ((data >> cpu_if::INT_LOCAL_FAULT) & 0x1) {
@@ -295,4 +289,4 @@ void cpu_if::monitor() {
 
         wait();
     }
-};
+}

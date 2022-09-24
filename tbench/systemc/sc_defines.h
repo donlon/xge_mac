@@ -34,13 +34,3 @@
 //// from http://www.opencores.org/lgpl.shtml                     ////
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
-
-// 64-bit Types for 32-bit and 64-bit OS
-
-# if defined(__WORDSIZE) && (__WORDSIZE == 64)
-typedef long			vlsint64_t;
-typedef unsigned long		vluint64_t;
-# else
-typedef long long		vlsint64_t;
-typedef unsigned long long	vluint64_t;
-# endif

@@ -38,18 +38,18 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_packet.h"
 
 SC_MODULE(pkt_generator) {
 
-  private:
+private:
 
     //---
     // Variables
 
-    sc_fifo<packet_t*> * tx_fifo;
+    sc_fifo<packet_t *> *tx_fifo;
 
     int tx_bucket;
 
@@ -65,26 +65,33 @@ SC_MODULE(pkt_generator) {
     int remote_fault_interval;
     int inject_pause_interval;
 
-  public:
+public:
 
     //---
     // Functions
 
-    void init(void);
+    void init();
 
-    void connect_fifo(sc_fifo<packet_t*> * fifo);
+    void connect_fifo(sc_fifo<packet_t *> *fifo);
 
     void set_tx_bucket(int cnt);
-    int get_tx_bucket(void);
+
+    int get_tx_bucket();
 
     void set_pkt_size(int min, int max);
 
     void set_crc_errors(int interval);
+
     void set_fragment_errors(int interval);
+
     void set_lenght_errors(int interval, int size);
+
     void set_coding_errors(int interval);
+
     void set_local_fault(int interval);
+
     void set_remote_fault(int interval);
+
     void set_inject_pause(int interval);
 
     //---

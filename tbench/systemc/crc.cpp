@@ -31,7 +31,7 @@ u_int32_t crc_tab[256];
  */
 u_int32_t chksum_crc32 (sc_uint<8> *block, unsigned int length)
 {
-    register unsigned long crc;
+    unsigned long crc;
     unsigned long i;
 
     crc = 0xFFFFFFFF;

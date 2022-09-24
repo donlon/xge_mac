@@ -34,13 +34,3 @@
 //// from http://www.opencores.org/lgpl.shtml                     ////
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
-
-#include <stdio.h>
-#include <iostream>
-#include <sys/times.h>
-#include <sys/stat.h>
-
-#include "systemc.h"
-
-
-

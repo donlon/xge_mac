@@ -35,17 +35,12 @@
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
 #include <iostream>
-#include <sys/times.h>
-#include <sys/stat.h>
-
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_pkt_generator.h"
 
-
-void pkt_generator::init(void) {
+void pkt_generator::init() {
     crc_interval = 0;
     fragment_interval = 0;
     lenght_err_interval = 0;
@@ -55,7 +50,7 @@ void pkt_generator::init(void) {
     remote_fault_interval = 0;
 }
 
-void pkt_generator::connect_fifo(sc_fifo<packet_t*> * fifo) {
+void pkt_generator::connect_fifo(sc_fifo<packet_t *> *fifo) {
     tx_fifo = fifo;
 }
 
@@ -82,7 +77,7 @@ void pkt_generator::gen_packet() {
             //--
             // Check fifo
 
-            if (tx_fifo == NULL || tx_fifo->num_free() == 0) {
+            if (tx_fifo == nullptr || tx_fifo->num_free() == 0) {
                 cout << "ERROR: FIFO not defined or full" << endl;
                 sc_stop();
             }
@@ -101,10 +96,10 @@ void pkt_generator::gen_packet() {
             //--
             // Generate packet
 
-            packet_t* pkt = new(packet_t);
+            packet_t *pkt = new(packet_t);
 
-            for (int i = 0; i < len+8; i++) {
-                pkt->payload[i] = len+i;
+            for (int i = 0; i < len + 8; i++) {
+                pkt->payload[i] = len + i;
             }
             pkt->payload[0] = running_cnt;
             running_cnt++;
@@ -118,12 +113,10 @@ void pkt_generator::gen_packet() {
                 if (crc_int >= crc_interval) {
                     pkt->err_flags |= PKT_FLAG_ERR_CRC;
                     crc_int = 0;
-                }
-                else {
+                } else {
                     crc_int++;
                 }
-            }
-            else {
+            } else {
                 crc_int = 0;
             }
 
@@ -131,12 +124,10 @@ void pkt_generator::gen_packet() {
                 if (fragment_int >= fragment_interval) {
                     pkt->err_flags |= PKT_FLAG_ERR_FRG;
                     fragment_int = 0;
-                }
-                else {
+                } else {
                     fragment_int++;
                 }
-            }
-            else {
+            } else {
                 fragment_int = 0;
             }
 
@@ -145,12 +136,10 @@ void pkt_generator::gen_packet() {
                     pkt->err_flags |= PKT_FLAG_ERR_LENGHT;
                     lenght_err_int = 0;
                     pkt->length = lenght_err_size;
-                }
-                else {
+                } else {
                     lenght_err_int++;
                 }
-            }
-            else {
+            } else {
                 lenght_err_int = 0;
             }
 
@@ -158,12 +147,10 @@ void pkt_generator::gen_packet() {
                 if (coding_int >= coding_interval) {
                     pkt->err_flags |= PKT_FLAG_ERR_CODING;
                     coding_int = 0;
-                }
-                else {
+                } else {
                     coding_int++;
                 }
-            }
-            else {
+            } else {
                 coding_int = 0;
             }
 
@@ -181,12 +168,10 @@ void pkt_generator::gen_packet() {
                         fault_spacing = 120;
                     }
                     pkt->err_info = fault_spacing;
-                }
-                else {
+                } else {
                     local_fault_int++;
                 }
-            }
-            else {
+            } else {
                 local_fault_int = 0;
             }
 
@@ -201,12 +186,10 @@ void pkt_generator::gen_packet() {
                         fault_spacing = 120;
                     }
                     pkt->err_info = fault_spacing;
-                }
-                else {
+                } else {
                     remote_fault_int++;
                 }
-            }
-            else {
+            } else {
                 remote_fault_int = 0;
             }
 
@@ -220,8 +203,7 @@ void pkt_generator::gen_packet() {
                     pkt->dest_addr = (pkt->dest_addr << 24) | 0x000001;
                     pause_int = 0;
 
-                }
-                else {
+                } else {
                     pause_int++;
                 }
             }
@@ -234,8 +216,7 @@ void pkt_generator::gen_packet() {
             tx_bucket--;
             len++;
 
-        }
-        else {
+        } else {
             wait(50, SC_NS);
         }
 
@@ -246,7 +227,7 @@ void pkt_generator::set_tx_bucket(int cnt) {
     tx_bucket = cnt;
 }
 
-int pkt_generator::get_tx_bucket(void) {
+int pkt_generator::get_tx_bucket() {
     return tx_bucket;
 }
 

@@ -35,17 +35,12 @@
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
 #include <iostream>
-#include <sys/times.h>
-#include <sys/stat.h>
-
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_scoreboard.h"
 
-
-void scoreboard::init(void) {
+void scoreboard::init() {
     disable_padding = false;
     disable_crc_check = false;
     disable_packet_check = false;
@@ -497,19 +492,19 @@ void scoreboard::notify_status(sbSourceId sid, sbStatusId statusId) {
     }
 }
 
-sbStats_t* scoreboard::get_pif_stats(void) {
+sbStats_t* scoreboard::get_pif_stats() {
     return &pif_stats;
 }
 
-sbStats_t* scoreboard::get_xgm_stats(void) {
+sbStats_t* scoreboard::get_xgm_stats() {
     return &xgm_stats;
 }
 
-sbCpuStats_t* scoreboard::get_cpu_stats(void) {
+sbCpuStats_t* scoreboard::get_cpu_stats() {
     return &cpu_stats;
 }
 
-void scoreboard::clear_stats(void) {
+void scoreboard::clear_stats() {
 
     //---
     // Clear FIFOs

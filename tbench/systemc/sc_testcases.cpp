@@ -38,11 +38,11 @@
 #include "sc_testcases.h"
 
 
-void testcases::connect_testbench(testbench* tbptr) {
+void testcases::connect_testbench(testbench *tbptr) {
     tb = tbptr;
 }
 
-void testcases::run_tests(void) {
+void testcases::run_tests() {
 
     //---
     // Init
@@ -96,7 +96,7 @@ void testcases::run_tests(void) {
 }
 
 
-void testcases::test_deficit_idle_count(void) {
+void testcases::test_deficit_idle_count() {
 
     int range;
     int size;
@@ -116,8 +116,8 @@ void testcases::test_deficit_idle_count(void) {
 
 void testcases::packet_dic(int minsize, int maxsize) {
 
-    sbStats_t* pif_stats;
-    sbStats_t* xgm_stats;
+    sbStats_t *pif_stats;
+    sbStats_t *xgm_stats;
 
     int cnt = 6;
     float delta;
@@ -163,8 +163,8 @@ void testcases::packet_dic(int minsize, int maxsize) {
 
 void testcases::test_packet_size(int min, int max, int cnt) {
 
-    sbStats_t* pif_stats;
-    sbStats_t* xgm_stats;
+    sbStats_t *pif_stats;
+    sbStats_t *xgm_stats;
     rmonStats_t rmon_stats;
 
     cout << "-----------------------" << endl;
@@ -244,8 +244,8 @@ void testcases::test_packet_size(int min, int max, int cnt) {
 
 void testcases::test_crc_errors(int min, int max, int cnt, int interval) {
 
-    sbStats_t* pif_stats;
-    sbCpuStats_t* cpu_stats;
+    sbStats_t *pif_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "CRC errors" << endl;
@@ -300,8 +300,8 @@ void testcases::test_crc_errors(int min, int max, int cnt, int interval) {
 
 void testcases::test_txdfifo_ovflow() {
 
-    sbStats_t* xgm_stats;
-    sbCpuStats_t* cpu_stats;
+    sbStats_t *xgm_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "TXD FIFO overflow" << endl;
@@ -380,8 +380,8 @@ void testcases::test_txdfifo_ovflow() {
 
 void testcases::test_rxdfifo_ovflow() {
 
-    sbStats_t* pif_stats;
-    sbCpuStats_t* cpu_stats;
+    sbStats_t *pif_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "RXD FIFO overflow" << endl;
@@ -461,8 +461,8 @@ void testcases::test_rxdfifo_ovflow() {
 
 void testcases::test_rx_fragments(int min, int max, int cnt, int interval) {
 
-    sbStats_t* pif_stats;
-    sbCpuStats_t* cpu_stats;
+    sbStats_t *pif_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "Fragments errors" << endl;
@@ -504,7 +504,7 @@ void testcases::test_rx_fragments(int min, int max, int cnt, int interval) {
     }
 
     if ((cpu_stats->fragment_error_cnt + cpu_stats->crc_error_cnt)
-                != pif_stats->fragment_error_cnt) {
+        != pif_stats->fragment_error_cnt) {
         cout << "ERROR: Not all fragment errors reported to cpu" << endl;
         sc_stop();
     }
@@ -518,8 +518,8 @@ void testcases::test_rx_fragments(int min, int max, int cnt, int interval) {
 
 void testcases::test_rx_lenght(int cnt, int interval) {
 
-    sbStats_t* pif_stats;
-    sbCpuStats_t* cpu_stats;
+    sbStats_t *pif_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "Lenght errors" << endl;
@@ -530,8 +530,8 @@ void testcases::test_rx_lenght(int cnt, int interval) {
 
     tb->sb.clear_stats();
 
-    tb->xgm_gen0.set_pkt_size(16000-4, 16000-4);
-    tb->xgm_gen0.set_lenght_errors(interval, 16000-3);
+    tb->xgm_gen0.set_pkt_size(16000 - 4, 16000 - 4);
+    tb->xgm_gen0.set_lenght_errors(interval, 16000 - 3);
     tb->sb.disable_signal_check = true;
 
     //---
@@ -572,14 +572,14 @@ void testcases::test_rx_lenght(int cnt, int interval) {
     // Return parameters to default state
 
     tb->sb.disable_signal_check = false;
-    tb->xgm_gen0.set_lenght_errors(0, 16000-3);
+    tb->xgm_gen0.set_lenght_errors(0, 16000 - 3);
 }
 
 void testcases::test_rx_coding_err(int cnt, int interval) {
 
-    sbStats_t* pif_stats;
-    sbStats_t* xgm_stats;
-    sbCpuStats_t* cpu_stats;
+    sbStats_t *pif_stats;
+    sbStats_t *xgm_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "Coding errors" << endl;
@@ -635,7 +635,7 @@ void testcases::test_rx_coding_err(int cnt, int interval) {
 
 void testcases::test_rx_local_fault(int min, int max, int cnt, int interval) {
 
-    sbStats_t* pif_stats;
+    sbStats_t *pif_stats;
 
     cout << "-----------------------" << endl;
     cout << "Local fault" << endl;
@@ -691,7 +691,7 @@ void testcases::test_rx_local_fault(int min, int max, int cnt, int interval) {
 
 void testcases::test_rx_remote_fault(int min, int max, int cnt, int interval) {
 
-    sbStats_t* pif_stats;
+    sbStats_t *pif_stats;
 
     cout << "-----------------------" << endl;
     cout << "Remote fault" << endl;
@@ -747,7 +747,7 @@ void testcases::test_rx_remote_fault(int min, int max, int cnt, int interval) {
 
 void testcases::test_rx_pause(int min, int max, int cnt, int interval) {
 
-    sbCpuStats_t* cpu_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "Receive Pause" << endl;
@@ -796,7 +796,7 @@ void testcases::test_rx_pause(int min, int max, int cnt, int interval) {
 
 void testcases::test_interrupt_mask() {
 
-    sbCpuStats_t* cpu_stats;
+    sbCpuStats_t *cpu_stats;
 
     cout << "-----------------------" << endl;
     cout << "Interrupt Mask" << endl;

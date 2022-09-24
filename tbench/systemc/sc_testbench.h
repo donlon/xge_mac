@@ -38,7 +38,7 @@
 #ifndef TESTBENCH_H
 #define TESTBENCH_H
 
-#include "systemc.h"		// SystemC global header
+#include <systemc.h>        // SystemC global header
 
 #include "sc_defines.h"
 
@@ -50,7 +50,7 @@
 
 SC_MODULE(testbench) {
 
-  public:
+public:
 
     //---
     // Ports
@@ -74,12 +74,12 @@ SC_MODULE(testbench) {
     sc_out<bool> wb_we_i;
 
     sc_out<unsigned int> xgmii_rxc;
-    sc_out<vluint64_t > xgmii_rxd;
+    sc_out<uint64_t> xgmii_rxd;
 
     sc_in<unsigned int> xgmii_txc;
-    sc_in<vluint64_t > xgmii_txd;
+    sc_in<uint64_t> xgmii_txd;
 
-    sc_out<vluint64_t > pkt_tx_data;
+    sc_out<uint64_t> pkt_tx_data;
     sc_out<bool> pkt_tx_eop;
     sc_out<unsigned int> pkt_tx_mod;
     sc_out<bool> pkt_tx_sop;
@@ -88,7 +88,7 @@ SC_MODULE(testbench) {
     sc_in<bool> pkt_tx_full;
 
     sc_in<bool> pkt_rx_avail;
-    sc_in<vluint64_t > pkt_rx_data;
+    sc_in<uint64_t> pkt_rx_data;
     sc_in<bool> pkt_rx_eop;
     sc_in<unsigned int> pkt_rx_mod;
     sc_in<bool> pkt_rx_err;
@@ -114,67 +114,67 @@ SC_MODULE(testbench) {
     // Functions
 
     SC_CTOR(testbench) :
-        cpu_if0("cpu_if0"),
-        pkt_if0("pkt_if0"),
-        xgm_if0("xgm_if0"),
-        pif_gen0("pif_gen0"),
-        xgm_gen0("xgm_gen0"),
-        sb("sb") {
+            cpu_if0("cpu_if0"),
+            pkt_if0("pkt_if0"),
+            xgm_if0("xgm_if0"),
+            pif_gen0("pif_gen0"),
+            xgm_gen0("xgm_gen0"),
+            sb("sb") {
 
         //--
         // CPU Interface
 
-        cpu_if0.wb_clk_i (wb_clk_i);
+        cpu_if0.wb_clk_i(wb_clk_i);
 
-        cpu_if0.wb_rst_i (wb_rst_i);
+        cpu_if0.wb_rst_i(wb_rst_i);
 
-        cpu_if0.wb_ack_o (wb_ack_o);
-        cpu_if0.wb_dat_o (wb_dat_o);
-        cpu_if0.wb_int_o (wb_int_o);
+        cpu_if0.wb_ack_o(wb_ack_o);
+        cpu_if0.wb_dat_o(wb_dat_o);
+        cpu_if0.wb_int_o(wb_int_o);
 
-        cpu_if0.wb_adr_i (wb_adr_i);
-        cpu_if0.wb_cyc_i (wb_cyc_i);
-        cpu_if0.wb_dat_i (wb_dat_i);
-        cpu_if0.wb_stb_i (wb_stb_i);
-        cpu_if0.wb_we_i (wb_we_i);
+        cpu_if0.wb_adr_i(wb_adr_i);
+        cpu_if0.wb_cyc_i(wb_cyc_i);
+        cpu_if0.wb_dat_i(wb_dat_i);
+        cpu_if0.wb_stb_i(wb_stb_i);
+        cpu_if0.wb_we_i(wb_we_i);
 
         //---
         // Packet Interface
 
-        pkt_if0.clk_156m25 (clk_156m25);
+        pkt_if0.clk_156m25(clk_156m25);
 
-        pkt_if0.reset_156m25_n (reset_156m25_n);
+        pkt_if0.reset_156m25_n(reset_156m25_n);
 
-        pkt_if0.pkt_tx_data (pkt_tx_data);
-        pkt_if0.pkt_tx_eop (pkt_tx_eop);
-        pkt_if0.pkt_tx_mod (pkt_tx_mod);
-        pkt_if0.pkt_tx_sop (pkt_tx_sop);
-        pkt_if0.pkt_tx_val (pkt_tx_val);
+        pkt_if0.pkt_tx_data(pkt_tx_data);
+        pkt_if0.pkt_tx_eop(pkt_tx_eop);
+        pkt_if0.pkt_tx_mod(pkt_tx_mod);
+        pkt_if0.pkt_tx_sop(pkt_tx_sop);
+        pkt_if0.pkt_tx_val(pkt_tx_val);
 
-        pkt_if0.pkt_tx_full (pkt_tx_full);
+        pkt_if0.pkt_tx_full(pkt_tx_full);
 
-        pkt_if0.pkt_rx_avail (pkt_rx_avail);
-        pkt_if0.pkt_rx_data (pkt_rx_data);
-        pkt_if0.pkt_rx_eop (pkt_rx_eop);
-        pkt_if0.pkt_rx_mod (pkt_rx_mod);
-        pkt_if0.pkt_rx_err (pkt_rx_err);
-        pkt_if0.pkt_rx_sop (pkt_rx_sop);
-        pkt_if0.pkt_rx_val (pkt_rx_val);
+        pkt_if0.pkt_rx_avail(pkt_rx_avail);
+        pkt_if0.pkt_rx_data(pkt_rx_data);
+        pkt_if0.pkt_rx_eop(pkt_rx_eop);
+        pkt_if0.pkt_rx_mod(pkt_rx_mod);
+        pkt_if0.pkt_rx_err(pkt_rx_err);
+        pkt_if0.pkt_rx_sop(pkt_rx_sop);
+        pkt_if0.pkt_rx_val(pkt_rx_val);
 
-        pkt_if0.pkt_rx_ren (pkt_rx_ren);
+        pkt_if0.pkt_rx_ren(pkt_rx_ren);
 
         //---
         // XGMII Interface
 
-        xgm_if0.clk_xgmii (clk_xgmii);
+        xgm_if0.clk_xgmii(clk_xgmii);
 
-        xgm_if0.reset_xgmii_n (reset_xgmii_n);
+        xgm_if0.reset_xgmii_n(reset_xgmii_n);
 
-        xgm_if0.xgmii_rxc (xgmii_rxc);
-        xgm_if0.xgmii_rxd (xgmii_rxd);
+        xgm_if0.xgmii_rxc(xgmii_rxc);
+        xgm_if0.xgmii_rxd(xgmii_rxd);
 
-        xgm_if0.xgmii_txc (xgmii_txc);
-        xgm_if0.xgmii_txd (xgmii_txd);
+        xgm_if0.xgmii_txc(xgmii_txc);
+        xgm_if0.xgmii_txd(xgmii_txd);
 
         //---
         // Connect packet generators to physical interfaces

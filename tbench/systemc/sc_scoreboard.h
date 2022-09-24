@@ -38,7 +38,7 @@
 #ifndef SCOREBOARD_H
 #define SCOREBOARD_H
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_packet.h"
 
@@ -89,7 +89,7 @@ struct sbCpuStats_t {
 
 SC_MODULE(scoreboard) {
 
-  public:
+public:
 
     //---
     // Types
@@ -113,19 +113,19 @@ SC_MODULE(scoreboard) {
         RX_GOOD_PAUSE_FRAME,
     };
 
-  private:
+private:
 
     //---
     // Variables
 
-    sc_fifo<packet_t*> pif_fifo;
-    sc_fifo<packet_t*> xgm_fifo;
+    sc_fifo<packet_t *> pif_fifo;
+    sc_fifo<packet_t *> xgm_fifo;
 
     sbStats_t pif_stats;
     sbStats_t xgm_stats;
     sbCpuStats_t cpu_stats;
 
-  public:
+public:
 
     //---
     // Variables
@@ -139,21 +139,25 @@ SC_MODULE(scoreboard) {
     //---
     // Functions
 
-    void init(void);
+    void init();
 
-    void notify_packet_tx(sbSourceId sid, packet_t* pkt);
-    void notify_packet_rx(sbSourceId sid, packet_t* pkt);
+    void notify_packet_tx(sbSourceId sid, packet_t *pkt);
+
+    void notify_packet_rx(sbSourceId sid, packet_t *pkt);
+
     void notify_status(sbSourceId sid, sbStatusId statusId);
 
-    sbStats_t* get_pif_stats(void);
-    sbStats_t* get_xgm_stats(void);
-    sbCpuStats_t* get_cpu_stats(void);
+    sbStats_t *get_pif_stats();
 
-    void clear_stats(void);
+    sbStats_t *get_xgm_stats();
 
-    SC_CTOR(scoreboard):
-        pif_fifo (2000),
-        xgm_fifo (2000) {
+    sbCpuStats_t *get_cpu_stats();
+
+    void clear_stats();
+
+    SC_CTOR(scoreboard) :
+            pif_fifo(2000),
+            xgm_fifo(2000) {
 
     }
 

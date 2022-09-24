@@ -38,7 +38,7 @@
 #ifndef XGMII_IF_H
 #define XGMII_IF_H
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_defines.h"
 
@@ -47,7 +47,7 @@
 
 SC_MODULE(xgmii_if) {
 
-  public:
+public:
 
     //---
     // Ports
@@ -57,23 +57,23 @@ SC_MODULE(xgmii_if) {
     sc_in<bool> reset_xgmii_n;
 
     sc_out<unsigned int> xgmii_rxc;
-    sc_out<vluint64_t > xgmii_rxd;
+    sc_out<uint64_t> xgmii_rxd;
 
     sc_in<unsigned int> xgmii_txc;
-    sc_in<vluint64_t > xgmii_txd;
+    sc_in<uint64_t> xgmii_txd;
 
-  private:
+private:
 
     //---
     // Variables
 
-    sc_fifo<packet_t*> tx_fifo;
-    sc_fifo<packet_t*> rx_fifo;
+    sc_fifo<packet_t *> tx_fifo;
+    sc_fifo<packet_t *> rx_fifo;
 
     scoreboard *sb;
     scoreboard::sbSourceId sb_id;
 
-  public:
+public:
 
     //---
     // Variables
@@ -89,22 +89,26 @@ SC_MODULE(xgmii_if) {
     //---
     // Functions
 
-    sc_fifo<packet_t*> * get_tx_fifo_ptr();
-    sc_fifo<packet_t*> * get_rx_fifo_ptr();
+    sc_fifo<packet_t *> *get_tx_fifo_ptr();
 
-    void init(void);
+    sc_fifo<packet_t *> *get_rx_fifo_ptr();
+
+    void init();
+
     void connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid);
 
     //---
     // Threads
 
     void transmit();
+
     void receive();
+
     void monitor();
 
     SC_CTOR(xgmii_if) :
-        tx_fifo (2),
-        rx_fifo (2) {
+            tx_fifo(2),
+            rx_fifo(2) {
 
         SC_CTHREAD (transmit, clk_xgmii.pos());
 

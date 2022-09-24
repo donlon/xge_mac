@@ -35,24 +35,21 @@
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
 #include <iostream>
-#include <sys/times.h>
-#include <sys/stat.h>
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_pkt_if.h"
 
-sc_fifo<packet_t*> * pkt_if::get_tx_fifo_ptr() {
+sc_fifo<packet_t *> *pkt_if::get_tx_fifo_ptr() {
     return &tx_fifo;
 }
 
-sc_fifo<packet_t*> * pkt_if::get_rx_fifo_ptr() {
+sc_fifo<packet_t *> *pkt_if::get_rx_fifo_ptr() {
     return &rx_fifo;
 }
 
-void pkt_if::init(void) {
+void pkt_if::init() {
     disable_rx = false;
     flush_rx = false;
     allow_rx_sop_err = false;
@@ -65,7 +62,7 @@ void pkt_if::connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid) {
 
 void pkt_if::transmit() {
 
-    packet_t* pkt;
+    packet_t *pkt;
 
     while (true) {
 
@@ -82,26 +79,24 @@ void pkt_if::transmit() {
             for (int i = 0; i < pkt->length; i += 8) {
 
                 pkt_tx_data = pkt->data[i] << 56 |
-                    pkt->data[i+1] << 48 |
-                    pkt->data[i+2] << 40 |
-                    pkt->data[i+3] << 32 |
-                    pkt->data[i+4] << 24 |
-                    pkt->data[i+5] << 16 |
-                    pkt->data[i+6] << 8 |
-                    pkt->data[i+7];
+                              pkt->data[i + 1] << 48 |
+                              pkt->data[i + 2] << 40 |
+                              pkt->data[i + 3] << 32 |
+                              pkt->data[i + 4] << 24 |
+                              pkt->data[i + 5] << 16 |
+                              pkt->data[i + 6] << 8 |
+                              pkt->data[i + 7];
 
                 if (i == 0) {
                     pkt_tx_sop = 1;
-                }
-                else {
+                } else {
                     pkt_tx_sop = 0;
                 }
 
                 if (i + 8 >= pkt->length) {
                     pkt_tx_eop = 1;
                     pkt_tx_mod = pkt->length % 8;
-                }
-                else {
+                } else {
                     pkt_tx_eop = 0;
                 }
 
@@ -129,7 +124,7 @@ void pkt_if::transmit() {
 
 void pkt_if::receive() {
 
-    packet_t* pkt;
+    packet_t *pkt;
 
     sc_uint<64> data;
 
@@ -168,8 +163,7 @@ void pkt_if::receive() {
                         cout << "INFO: SOP errors allowed" << endl;
                         pkt->length = 0;
                         pkt->err_flags = 0;
-                    }
-                    else {
+                    } else {
                         pkt->err_flags |= PKT_FLAG_ERR_SOP;
                     }
                 }
@@ -186,14 +180,14 @@ void pkt_if::receive() {
 
                 for (int lane = 0; lane < 8; lane++) {
 
-                    pkt->data[pkt->length++] = (data >> (8 * (7-lane))) & 0xff;
+                    pkt->data[pkt->length++] = (data >> (8 * (7 - lane))) & 0xff;
 
                     if (pkt->length >= 17000) {
                         cout << "ERROR: Packet too long" << endl;
                         sc_stop();
                     }
 
-                    if (pkt_rx_eop && (pkt_rx_mod == ((lane+1) % 8))) {
+                    if (pkt_rx_eop && (pkt_rx_mod == ((lane + 1) % 8))) {
                         break;
                     }
                 }
@@ -224,8 +218,7 @@ void pkt_if::receive() {
                 sb->notify_packet_rx(sb_id, pkt);
             }
 
-        }
-        else {
+        } else {
             pkt_rx_ren = 0;
             wait();
         }

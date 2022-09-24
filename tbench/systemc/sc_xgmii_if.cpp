@@ -35,24 +35,21 @@
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
 #include <iostream>
-#include <sys/times.h>
-#include <sys/stat.h>
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_xgmii_if.h"
 
-sc_fifo<packet_t*> * xgmii_if::get_tx_fifo_ptr() {
+sc_fifo<packet_t *> *xgmii_if::get_tx_fifo_ptr() {
     return &tx_fifo;
 }
 
-sc_fifo<packet_t*> * xgmii_if::get_rx_fifo_ptr() {
+sc_fifo<packet_t *> *xgmii_if::get_rx_fifo_ptr() {
     return &rx_fifo;
 }
 
-void xgmii_if::init(void) {
+void xgmii_if::init() {
     allow_idle_errors = false;
     disable_padding = false;
     inject_noise = false;
@@ -65,19 +62,19 @@ void xgmii_if::connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid)
 
 void xgmii_if::transmit() {
 
-    packet_t* pkt;
+    packet_t *pkt;
 
     sc_uint<64> txd = 0;
     sc_uint<8> txc = 0;
 
-    uint64_t noise [] = {0x1, 0xd5555555555555fbLL,
-                         0x1, 0xd5555555555555fbLL,
-                         0x1, 0xd5555555555555fcLL,
-                         0x0, 0xd5555555555555fbLL,
-                         0x1, 0xd5555555555555fbLL,
-                         0x0, 0xd5555555555555fbLL,
-                         0x1, 0x1111111111111111LL,
-                         };
+    uint64_t noise[] = {0x1, 0xd5555555555555fbLL,
+                        0x1, 0xd5555555555555fbLL,
+                        0x1, 0xd5555555555555fcLL,
+                        0x0, 0xd5555555555555fbLL,
+                        0x1, 0xd5555555555555fbLL,
+                        0x0, 0xd5555555555555fbLL,
+                        0x1, 0x1111111111111111LL,
+    };
 
     int lane = 0;
     int bytecnt = 0;
@@ -121,9 +118,8 @@ void xgmii_if::transmit() {
 
             if (pkt->err_flags & PKT_FLAG_ERR_CODING) {
                 if (coding_offset >= pkt->length) {
-                    pkt->err_info = pkt->length-1;
-                }
-                else {
+                    pkt->err_info = pkt->length - 1;
+                } else {
                     pkt->err_info = coding_offset;
                 }
                 coding_offset++;
@@ -160,39 +156,34 @@ void xgmii_if::transmit() {
 
 
         if (ifg != 0) {
-            txd |= ((sc_uint<64>)0x07) << (8 * lane);
+            txd |= ((sc_uint<64>) 0x07) << (8 * lane);
             txc |= 0x01 << lane;
             ifg--;
 
-        }
-        else if (fault_spacing_cnt != 0) {
+        } else if (fault_spacing_cnt != 0) {
 
-            txd |= ((sc_uint<64>)0x07) << (8 * lane);
+            txd |= ((sc_uint<64>) 0x07) << (8 * lane);
             txc |= 0x01 << lane;
 
             fault_spacing_cnt--;
 
-        }
-        else if ((lane == 0 || lane == 4) && fault_byte == 4) {
+        } else if ((lane == 0 || lane == 4) && fault_byte == 4) {
 
-            txd |= ((sc_uint<64>)0x9c) << (8 * lane);
+            txd |= ((sc_uint<64>) 0x9c) << (8 * lane);
             txc |= 0x01 << lane;
 
             fault_byte--;
 
-        }
-        else if (fault_byte == 3 || fault_byte == 2) {
+        } else if (fault_byte == 3 || fault_byte == 2) {
 
             fault_byte--;
 
-        }
-        else if (fault_byte == 1) {
+        } else if (fault_byte == 1) {
 
             if (pkt->err_flags & PKT_FLAG_LOCAL_FAULT) {
-                txd |= ((sc_uint<64>)0x01) << (8 * lane);
-            }
-            else {
-                txd |= ((sc_uint<64>)0x02) << (8 * lane);
+                txd |= ((sc_uint<64>) 0x01) << (8 * lane);
+            } else {
+                txd |= ((sc_uint<64>) 0x02) << (8 * lane);
             }
             fault_byte--;
 
@@ -204,31 +195,27 @@ void xgmii_if::transmit() {
             if (fault_cnt == 1) {
                 fault_spacing_cnt = 4 * fault_spacing;
             }
-        }
-        else if ((lane == 0 || lane == 4) && bytecnt != length && preamblecnt == 0) {
+        } else if ((lane == 0 || lane == 4) && bytecnt != length && preamblecnt == 0) {
 
-            txd |= ((sc_uint<64>)0xfb) << (8 * lane);
+            txd |= ((sc_uint<64>) 0xfb) << (8 * lane);
             txc |= 0x01 << lane;
 
             preamblecnt++;
 
-        }
-        else if (preamblecnt > 0 && preamblecnt < 7) {
+        } else if (preamblecnt > 0 && preamblecnt < 7) {
 
-            txd |= ((sc_uint<64>)0x55) << (8 * lane);
-
-            preamblecnt++;
-
-        }
-        else if (preamblecnt == 7) {
-
-            txd |= ((sc_uint<64>)0xd5) << (8 * lane);
+            txd |= ((sc_uint<64>) 0x55) << (8 * lane);
 
             preamblecnt++;
 
-        }
-        else if (preamblecnt > 7 && (bytecnt == (length-4)) &&
-                 (pkt->err_flags & PKT_FLAG_ERR_FRG)) {
+        } else if (preamblecnt == 7) {
+
+            txd |= ((sc_uint<64>) 0xd5) << (8 * lane);
+
+            preamblecnt++;
+
+        } else if (preamblecnt > 7 && (bytecnt == (length - 4)) &&
+                   (pkt->err_flags & PKT_FLAG_ERR_FRG)) {
 
             //---
             // Fragment insertion
@@ -238,30 +225,27 @@ void xgmii_if::transmit() {
             preamblecnt = 0;
             ifg = 0;
 
-        }
-        else if (preamblecnt >7 && bytecnt == pkt->err_info &&
-                 (pkt->err_flags & PKT_FLAG_ERR_CODING)) {
+        } else if (preamblecnt > 7 && bytecnt == pkt->err_info &&
+                   (pkt->err_flags & PKT_FLAG_ERR_CODING)) {
 
             //---
             // Coding error insertion
 
             txc |= 0x01 << lane;
-            txd |= ((sc_uint<64>)pkt->data[bytecnt]) << (8 * lane);
+            txd |= ((sc_uint<64>) pkt->data[bytecnt]) << (8 * lane);
             bytecnt++;
 
-        }
-        else if (preamblecnt > 7 && bytecnt < length) {
+        } else if (preamblecnt > 7 && bytecnt < length) {
 
-            txd |= ((sc_uint<64>)pkt->data[bytecnt]) << (8 * lane);
+            txd |= ((sc_uint<64>) pkt->data[bytecnt]) << (8 * lane);
             bytecnt++;
 
-        }
-        else if (preamblecnt > 7 && bytecnt == length) {
+        } else if (preamblecnt > 7 && bytecnt == length) {
 
             //---
             // End of frame TERMINATE
 
-            txd |= ((sc_uint<64>)0xfd) << (8 * lane);
+            txd |= ((sc_uint<64>) 0xfd) << (8 * lane);
             txc |= 0x01 << lane;
 
             bytecnt = 0;
@@ -271,24 +255,22 @@ void xgmii_if::transmit() {
             // Minimum IFG is 5 including TERMINATE
             ifg = 4;
 
-        }
-        else {
-            txd |= ((sc_uint<64>)0x07) << (8 * lane);
+        } else {
+            txd |= ((sc_uint<64>) 0x07) << (8 * lane);
             txc |= 0x01 << lane;
         }
         if (inject_noise) {
             for (count = 0; count < 10000; count += 2) {
-                i = 2 * (random() % (sizeof(noise)/16));
-                cout << "NOISE: " << hex << noise[i] << " " << noise[i+1] << dec << endl;
-                xgmii_rxd = noise[i+1];
+                i = 2 * (random() % (sizeof(noise) / 16));
+                cout << "NOISE: " << hex << noise[i] << " " << noise[i + 1] << dec << endl;
+                xgmii_rxd = noise[i + 1];
                 xgmii_rxc = noise[i];
                 txd = 0;
                 txc = 0;
                 wait();
             }
             inject_noise = false;
-        }
-        else if (lane == 7) {
+        } else if (lane == 7) {
             xgmii_rxd = txd;
             xgmii_rxc = txc;
             txd = 0;
@@ -303,7 +285,7 @@ void xgmii_if::transmit() {
 
 void xgmii_if::receive() {
 
-    packet_t* pkt;
+    packet_t *pkt;
 
     sc_uint<64> rxd;
     sc_uint<8> rxc;
@@ -328,21 +310,19 @@ void xgmii_if::receive() {
         while (true) {
 
             // Check for START character
-            if (((rxd >> (8*lane)) & 0xff) == 0xfb && ((rxc >> lane) & 0x1) == 1) {
+            if (((rxd >> (8 * lane)) & 0xff) == 0xfb && ((rxc >> lane) & 0x1) == 1) {
                 if (disable_receive) {
                     cout << "INFO: XGMII Receive Disabled" << endl;
-                }
-                else {
+                } else {
                     break;
                 }
             };
 
             // Check IDLE character and control lines
-            if (((rxd >> (8*lane)) & 0xff) != 0x07 || ((rxc >> lane) & 0x1) != 1) {
+            if (((rxd >> (8 * lane)) & 0xff) != 0x07 || ((rxc >> lane) & 0x1) != 1) {
                 if (allow_idle_errors) {
                     cout << "INFO: IDLE check disabled" << endl;
-                }
-                else {
+                } else {
                     cout << "ERROR: IDLE character " << hex << rxd << " " << rxc << dec << lane << endl;
                     sc_stop();
                 }
@@ -384,39 +364,37 @@ void xgmii_if::receive() {
         while (true) {
 
             // Look for end of frame delimiter in any lane
-            if (((rxd >> (8*lane)) & 0xff) == 0xfd && ((rxc >> lane) & 0x1) == 1) {
+            if (((rxd >> (8 * lane)) & 0xff) == 0xfd && ((rxc >> lane) & 0x1) == 1) {
                 break;
             };
 
             // Stop if packet is too long
-            if (bytecnt >=  10000) {
+            if (bytecnt >= 10000) {
                 break;
             }
 
             // Validate preamble bytes
-            if (bytecnt > 0 && bytecnt <= 6 && ((rxd >> (8*lane)) & 0xff) != 0x55) {
+            if (bytecnt > 0 && bytecnt <= 6 && ((rxd >> (8 * lane)) & 0xff) != 0x55) {
                 cout << "ERROR: Invalid preamble byte: " << bytecnt << endl;
                 sc_stop();
             }
 
             // Validate SFD code in preamble
-            if (bytecnt == 7 && ((rxd >> (8*lane)) & 0xff) != 0xd5) {
+            if (bytecnt == 7 && ((rxd >> (8 * lane)) & 0xff) != 0xd5) {
                 cout << "ERROR: Invalid preamble byte: " << bytecnt << endl;
                 sc_stop();
             }
 
             // Store all bytes after preamble
-            if (bytecnt >  7) {
+            if (bytecnt > 7) {
                 if (((rxc >> lane) & 0x1) == 0) {
-                    pkt->data[pkt->length] = ((rxd >> (8*lane)) & 0xff);
+                    pkt->data[pkt->length] = ((rxd >> (8 * lane)) & 0xff);
                     pkt->length++;
-                }
-                else {
+                } else {
                     cout << "ERROR: RXC high during data cycle" << endl;
                     sc_stop();
                 }
-            }
-            else if (bytecnt > 0) {
+            } else if (bytecnt > 0) {
                 if (((rxc >> lane) & 0x1) == 1) {
                     cout << "ERROR: RXC high during preamble" << endl;
                     sc_stop();
@@ -487,8 +465,7 @@ void xgmii_if::monitor() {
             }
             rx_local_fault = true;
 
-        }
-        else {
+        } else {
 
             if (rx_local_fault) {
                 cout << "XGMII Local Fault De-Asserted" << endl;
@@ -511,8 +488,7 @@ void xgmii_if::monitor() {
             }
             rx_remote_fault = true;
 
-        }
-        else {
+        } else {
 
             if (rx_remote_fault) {
                 cout << "XGMII Remote Fault De-Asserted" << endl;

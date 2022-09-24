@@ -35,33 +35,32 @@
 ////                                                              ////
 //////////////////////////////////////////////////////////////////////
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_testbench.h"
 
-
-
 SC_MODULE(testcases) {
 
-  public:
+public:
 
     //---
     // Variables
 
     bool done;
 
-  private:
+private:
 
-    testbench* tb;
+    testbench *tb;
 
-  public:
+public:
 
     //---
     // Functions
 
-    void connect_testbench(testbench* tbptr);
+    void connect_testbench(testbench *tbptr);
 
-    void test_deficit_idle_count(void);
+    void test_deficit_idle_count();
+
     void packet_dic(int minsize, int maxsize);
 
     void test_packet_size(int min, int max, int cnt);
@@ -69,12 +68,17 @@ SC_MODULE(testcases) {
     void test_crc_errors(int min, int max, int cnt, int interval);
 
     void test_txdfifo_ovflow();
+
     void test_rxdfifo_ovflow();
 
     void test_rx_fragments(int min, int max, int cnt, int interval);
+
     void test_rx_lenght(int cnt, int interva);
+
     void test_rx_coding_err(int cnt, int interval);
+
     void test_rx_local_fault(int min, int max, int cnt, int interval);
+
     void test_rx_remote_fault(int min, int max, int cnt, int interval);
 
     void test_rx_pause(int min, int max, int cnt, int interval);
@@ -86,7 +90,7 @@ SC_MODULE(testcases) {
     //---
     // Threads
 
-    void run_tests(void);
+    void run_tests();
 
     SC_CTOR(testcases) {
 

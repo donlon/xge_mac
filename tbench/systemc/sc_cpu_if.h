@@ -38,7 +38,7 @@
 #ifndef CPU_IF_H
 #define CPU_IF_H
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_scoreboard.h"
 #include "sc_cpu_if.h"
@@ -54,7 +54,7 @@ struct rmonStats_t {
 
 SC_MODULE(cpu_if) {
 
-  public:
+public:
 
     //---
     // Ports
@@ -107,7 +107,7 @@ SC_MODULE(cpu_if) {
         CPUREG_STATSRXPKTS = 0x94,
     };
 
-  private:
+private:
 
     //---
     // Variables
@@ -123,7 +123,7 @@ SC_MODULE(cpu_if) {
     uint bus_data;
     bool bus_write;
 
-  public:
+public:
 
     //---
     // Variables
@@ -132,24 +132,33 @@ SC_MODULE(cpu_if) {
     // Functions
 
     void init();
+
     void connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid);
+
     void set_param(cpu_if::paramId param, int value);
+
     void set_interrupt(cpu_if::intId intr);
+
     void set_interrupt_mask(cpu_if::intId intr, bool value);
+
     void enable_all_interrupts(void);
+
     void get_rmon_stats(rmonStats_t *rmon_stats);
 
     uint read(uint addr);
+
     void write(uint addr, uint data);
+
     void writebits(uint addr, uint hbit, uint lbit, uint value);
 
     //---
     // Threads
 
     void transactor();
+
     void monitor();
 
-    SC_CTOR(cpu_if): bus_start(0), bus_done(0) {
+    SC_CTOR(cpu_if) : bus_start(0), bus_done(0) {
 
         SC_CTHREAD (monitor, wb_clk_i.pos());
         SC_CTHREAD (transactor, wb_clk_i.pos());

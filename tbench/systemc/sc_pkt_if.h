@@ -38,7 +38,7 @@
 #ifndef PKT_IF_H
 #define PKT_IF_H
 
-#include "systemc.h"
+#include <systemc.h>
 
 #include "sc_defines.h"
 
@@ -47,7 +47,7 @@
 
 SC_MODULE(pkt_if) {
 
-  public:
+public:
 
     //---
     // Ports
@@ -56,7 +56,7 @@ SC_MODULE(pkt_if) {
 
     sc_in<bool> reset_156m25_n;
 
-    sc_out<vluint64_t > pkt_tx_data;
+    sc_out<uint64_t> pkt_tx_data;
     sc_out<bool> pkt_tx_eop;
     sc_out<unsigned int> pkt_tx_mod;
     sc_out<bool> pkt_tx_sop;
@@ -65,7 +65,7 @@ SC_MODULE(pkt_if) {
     sc_in<bool> pkt_tx_full;
 
     sc_in<bool> pkt_rx_avail;
-    sc_in<vluint64_t > pkt_rx_data;
+    sc_in<uint64_t> pkt_rx_data;
     sc_in<bool> pkt_rx_eop;
     sc_in<unsigned int> pkt_rx_mod;
     sc_in<bool> pkt_rx_err;
@@ -74,18 +74,18 @@ SC_MODULE(pkt_if) {
 
     sc_out<bool> pkt_rx_ren;
 
-  private:
+private:
 
     //---
     // Variables
 
-    sc_fifo<packet_t*> tx_fifo;
-    sc_fifo<packet_t*> rx_fifo;
+    sc_fifo<packet_t *> tx_fifo;
+    sc_fifo<packet_t *> rx_fifo;
 
     scoreboard *sb;
     scoreboard::sbSourceId sb_id;
 
-  public:
+public:
 
     //---
     // Variables
@@ -97,28 +97,30 @@ SC_MODULE(pkt_if) {
     //---
     // Functions
 
-    sc_fifo<packet_t*> * get_tx_fifo_ptr();
-    sc_fifo<packet_t*> * get_rx_fifo_ptr();
+    sc_fifo<packet_t *> *get_tx_fifo_ptr();
 
-    void init(void);
+    sc_fifo<packet_t *> *get_rx_fifo_ptr();
+
+    void init();
+
     void connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid);
 
     //---
     // Threads
 
     void transmit();
+
     void receive();
 
     SC_CTOR(pkt_if) :
-        tx_fifo (2),
-        rx_fifo (2) {
+            tx_fifo(2),
+            rx_fifo(2) {
 
         SC_CTHREAD (transmit, clk_156m25.pos());
 
         SC_CTHREAD (receive, clk_156m25.pos());
 
     }
-
 };
 
 #endif

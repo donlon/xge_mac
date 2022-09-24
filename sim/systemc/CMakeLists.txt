@@ -24,7 +24,7 @@ add_executable(xge-mac
         ${PROJECT_ROOT}/tbench/systemc/sc_testcases.cpp
         ${PROJECT_ROOT}/tbench/systemc/sc_xgmii_if.cpp
         )
-target_compile_options(xge-mac PRIVATE -Wall -Wextra -Wno-unused-parameter)
+target_compile_options(xge-mac PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable)
 target_link_libraries(xge-mac SystemC::systemc)
 
 set(VERILATOR_FLAGS -sc -Wno-WIDTH --trace +define+SIM_NO_PCS +define+BIGENDIAN)

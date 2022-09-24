@@ -38,7 +38,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include "systemc.h"
+#include <systemc.h>
 
 
 #define PKT_FLAG_ERR_SIG      0x0001
@@ -59,7 +59,7 @@ struct packet_t {
 
     sc_uint<48> dest_addr;
     sc_uint<48> src_addr;
-    sc_uint<8> payload [18000];
+    sc_uint<8> payload[18000];
     sc_uint<32> crc;
 
     sc_uint<32> crc_rx;
@@ -69,21 +69,23 @@ struct packet_t {
     sc_uint<32> ifg;
     sc_uint<32> start_lane;
 
-    sc_uint<8> data [20000];
+    sc_uint<8> data[20000];
 };
 
-ostream& operator<<(ostream& os, const packet_t& p);
+ostream &operator<<(ostream &os, const packet_t &p);
 
-void pack(packet_t* p);
-void unpack(packet_t* p);
+void pack(packet_t *p);
 
-void add_crc(packet_t* p);
-void strip_crc(packet_t* p);
+void unpack(packet_t *p);
 
-void calc_crc(packet_t* p);
+void add_crc(packet_t *p);
 
-void pad(packet_t* p, int len);
+void strip_crc(packet_t *p);
 
-bool compare(packet_t* pkta, packet_t* pktb);
+void calc_crc(packet_t *p);
+
+void pad(packet_t *p, int len);
+
+bool compare(packet_t *pkta, packet_t *pktb);
 
 #endif
