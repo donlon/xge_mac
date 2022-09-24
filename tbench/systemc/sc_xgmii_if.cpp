@@ -70,14 +70,14 @@ void xgmii_if::transmit() {
     sc_uint<64> txd = 0;
     sc_uint<8> txc = 0;
 
-    int64_t noise [] = {0x1, 0xd5555555555555fb,
-                        0x1, 0xd5555555555555fb,
-                        0x1, 0xd5555555555555fc,
-                        0x0, 0xd5555555555555fb,
-                        0x1, 0xd5555555555555fb,
-                        0x0, 0xd5555555555555fb,
-                        0x1, 0x1111111111111111,
-                        };
+    uint64_t noise [] = {0x1, 0xd5555555555555fbLL,
+                         0x1, 0xd5555555555555fbLL,
+                         0x1, 0xd5555555555555fcLL,
+                         0x0, 0xd5555555555555fbLL,
+                         0x1, 0xd5555555555555fbLL,
+                         0x0, 0xd5555555555555fbLL,
+                         0x1, 0x1111111111111111LL,
+                         };
 
     int lane = 0;
     int bytecnt = 0;

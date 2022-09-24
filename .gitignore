@@ -1,0 +1,10 @@
+.vscode/
+.idea/
+
+*.o
+*.a
+*.lib
+*.so
+
+cmake-build/
+cmake-build-*/
