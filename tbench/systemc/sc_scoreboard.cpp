@@ -36,7 +36,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include <iostream>
-#include <systemc.h>
+#include <systemc>
 
 #include "sc_scoreboard.h"
 
@@ -48,7 +48,7 @@ void scoreboard::init() {
     disable_signal_check = false;
 }
 
-void scoreboard::notify_packet_tx(sbSourceId sid, packet_t* pkt) {
+void scoreboard::notify_packet_tx(sbSourceId sid, packet_t *pkt) {
 
     //---
     // Save packet to a fifo
@@ -81,8 +81,7 @@ void scoreboard::notify_packet_tx(sbSourceId sid, packet_t* pkt) {
             cout << "SCOREBOARD PAUSE INJECTED" << endl;
             xgm_stats.inject_pause_frame_cnt++;
 
-        }
-        else {
+        } else {
 
             xgm_fifo.write(pkt);
             xgm_stats.tx_pkt_cnt++;
@@ -116,11 +115,11 @@ void scoreboard::notify_packet_tx(sbSourceId sid, packet_t* pkt) {
     //cout << *pkt << endl;
 }
 
-void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
+void scoreboard::notify_packet_rx(sbSourceId sid, packet_t *pkt) {
 
-    sbStats_t* stats;
+    sbStats_t *stats;
 
-    packet_t* pkt_tx;
+    packet_t *pkt_tx;
     bool status;
 
     //---
@@ -195,32 +194,27 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
 
         cout << "INFO: Packet check disabled" << endl;
 
-    }
-    else if ((pkt_tx->err_flags & PKT_FLAG_ERR_FRG) &&
-             (pkt->err_flags & PKT_FLAG_ERR_SIG)) {
+    } else if ((pkt_tx->err_flags & PKT_FLAG_ERR_FRG) &&
+               (pkt->err_flags & PKT_FLAG_ERR_SIG)) {
 
         cout << "INFO: Fragment detected" << endl;
 
-    }
-    else if ((pkt_tx->err_flags & PKT_FLAG_ERR_LENGHT) &&
-             (pkt->err_flags & PKT_FLAG_ERR_SIG)) {
+    } else if ((pkt_tx->err_flags & PKT_FLAG_ERR_LENGHT) &&
+               (pkt->err_flags & PKT_FLAG_ERR_SIG)) {
 
         cout << "INFO: Lenght error detected" << endl;
 
-    }
-    else if ((pkt_tx->err_flags & PKT_FLAG_ERR_CODING) &&
-             (pkt->err_flags & PKT_FLAG_ERR_SIG)) {
+    } else if ((pkt_tx->err_flags & PKT_FLAG_ERR_CODING) &&
+               (pkt->err_flags & PKT_FLAG_ERR_SIG)) {
 
         cout << "INFO: Coding error detected:" << pkt_tx->err_info << endl;
 
-    }
-    else if ((sid == SB_PIF_ID || pkt->crc == pkt->crc_rx || disable_crc_check) &&
-             compare(pkt_tx, pkt)) {
+    } else if ((sid == SB_PIF_ID || pkt->crc == pkt->crc_rx || disable_crc_check) &&
+               compare(pkt_tx, pkt)) {
 
         //cout << "GOOD: Packets are matching" << endl;
 
-    }
-    else {
+    } else {
 
         cout << "ERROR: Packets don't match or bad CRC" << endl;
 
@@ -238,14 +232,14 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
 
     if (sid == SB_XGM_ID) {
 
-        cout << "PKTMOD " << pkt->length % 4 \
-             << " LANE " << pkt->start_lane \
-             << " DIC " << stats->deficit_idle_count \
-             << " IFGLEN " << stats->next_ifg_length  << endl;
+        cout << "PKTMOD " << pkt->length % 4
+             << " LANE " << pkt->start_lane
+             << " DIC " << stats->deficit_idle_count
+             << " IFGLEN " << stats->next_ifg_length << endl;
 
         if (pkt->ifg < 1000 && stats->next_ifg_length != 1000) {
             if (pkt->ifg != stats->next_ifg_length) {
-                cout << "ERROR: DIC IFG " << pkt->ifg                   \
+                cout << "ERROR: DIC IFG " << pkt->ifg
                      << " Predicted: " << stats->next_ifg_length << endl;
                 sc_stop();
             }
@@ -278,12 +272,11 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
             cout << "SCOREBOARD CRC ERROR CHECKED" << endl;
             pif_stats.crc_error_cnt++;
 
-            if (cpu_stats.crc_error_cnt+1 < pif_stats.crc_error_cnt) {
+            if (cpu_stats.crc_error_cnt + 1 < pif_stats.crc_error_cnt) {
                 cout << "ERROR: CRC error not reported to cpu" << endl;
                 sc_stop();
             }
-        }
-        else {
+        } else {
             cout << "ERROR: CRC error not detected: " << hex << pkt->err_flags << dec << endl;
             sc_stop();
         }
@@ -306,8 +299,7 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
                 cout << "ERROR: FRAGMENT error not reported to cpu" << endl;
                 sc_stop();
             }
-        }
-        else {
+        } else {
             cout << "ERROR: FRAGMENT error not detected: "
                  << hex << pkt->err_flags << dec << endl;
             sc_stop();
@@ -330,8 +322,7 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
                 cout << "ERROR: LENGHT error not reported to cpu" << endl;
                 sc_stop();
             }
-        }
-        else {
+        } else {
             cout << "ERROR: LENGHT error not detected: "
                  << hex << pkt->err_flags << dec << endl;
             sc_stop();
@@ -349,14 +340,13 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
 
             cout << "SCOREBOARD CODING ERROR CHECKED" << endl;
 
-            if (cpu_stats.crc_error_cnt+1 < xgm_stats.crc_error_cnt) {
+            if (cpu_stats.crc_error_cnt + 1 < xgm_stats.crc_error_cnt) {
                 cout << "CPU Count: " << cpu_stats.crc_error_cnt <<
-                    " XGM Count: " << xgm_stats.crc_error_cnt << endl;
+                     " XGM Count: " << xgm_stats.crc_error_cnt << endl;
                 cout << "ERROR: CODING error not reported to cpu" << endl;
                 sc_stop();
             }
-        }
-        else {
+        } else {
             cout << "ERROR: CODING error not detected: "
                  << hex << pkt->err_flags << dec << endl;
             sc_stop();
@@ -371,8 +361,7 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
         if (!disable_flags_check) {
             cout << "ERROR: Error flags set: " << hex << pkt->err_flags << dec << endl;
             sc_stop();
-        }
-        else {
+        } else {
             cout << "INFO: Error flags set: " << hex << pkt->err_flags << dec << endl;
         }
     }
@@ -380,8 +369,8 @@ void scoreboard::notify_packet_rx(sbSourceId sid, packet_t* pkt) {
     //---
     // Delete packets
 
-    delete(pkt_tx);
-    delete(pkt);
+    delete pkt_tx;
+    delete pkt;
 }
 
 void scoreboard::notify_status(sbSourceId sid, sbStatusId statusId) {
@@ -492,15 +481,15 @@ void scoreboard::notify_status(sbSourceId sid, sbStatusId statusId) {
     }
 }
 
-sbStats_t* scoreboard::get_pif_stats() {
+sbStats_t *scoreboard::get_pif_stats() {
     return &pif_stats;
 }
 
-sbStats_t* scoreboard::get_xgm_stats() {
+sbStats_t *scoreboard::get_xgm_stats() {
     return &xgm_stats;
 }
 
-sbCpuStats_t* scoreboard::get_cpu_stats() {
+sbCpuStats_t *scoreboard::get_cpu_stats() {
     return &cpu_stats;
 }
 
@@ -510,11 +499,11 @@ void scoreboard::clear_stats() {
     // Clear FIFOs
 
     while (pif_fifo.num_available() != 0) {
-        delete(pif_fifo.read());
+        delete pif_fifo.read();
     }
 
     while (xgm_fifo.num_available() != 0) {
-        delete(xgm_fifo.read());
+        delete xgm_fifo.read();
     }
 
     //---

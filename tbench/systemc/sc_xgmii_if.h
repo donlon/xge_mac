@@ -100,10 +100,13 @@ public:
     //---
     // Threads
 
+    [[noreturn]]
     void transmit();
 
+    [[noreturn]]
     void receive();
 
+    [[noreturn]]
     void monitor();
 
     SC_CTOR(xgmii_if) :

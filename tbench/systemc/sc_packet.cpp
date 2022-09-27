@@ -106,7 +106,7 @@ void strip_crc(packet_t *p) {
 
 void calc_crc(packet_t *p) {
 
-    u_int32_t crc;
+    uint32_t crc;
 
     p->crc = chksum_crc32(p->data, p->length);
 }
@@ -117,7 +117,7 @@ void pad(packet_t *p, int len) {
             p->payload[i] = 0;
         }
         p->length = len;
-    };
+    }
 }
 
 bool compare(packet_t *pkta, packet_t *pktb) {

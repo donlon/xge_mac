@@ -108,8 +108,10 @@ public:
     //---
     // Threads
 
+    [[noreturn]]
     void transmit();
 
+    [[noreturn]]
     void receive();
 
     SC_CTOR(pkt_if) :

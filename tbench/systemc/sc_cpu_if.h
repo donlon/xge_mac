@@ -38,6 +38,7 @@
 #ifndef CPU_IF_H
 #define CPU_IF_H
 
+#include <cstdint>
 #include <systemc.h>
 
 #include "sc_scoreboard.h"
@@ -52,7 +53,7 @@ struct rmonStats_t {
 };
 
 
-SC_MODULE(cpu_if) {
+struct cpu_if : sc_core::sc_module {
 
 public:
 
@@ -119,8 +120,8 @@ private:
     sc_semaphore bus_start;
     sc_semaphore bus_done;
 
-    uint bus_addr;
-    uint bus_data;
+    uint32_t bus_addr;
+    uint32_t bus_data;
     bool bus_write;
 
 public:
@@ -145,17 +146,19 @@ public:
 
     void get_rmon_stats(rmonStats_t *rmon_stats);
 
-    uint read(uint addr);
+    uint32_t read(uint32_t addr);
 
-    void write(uint addr, uint data);
+    void write(uint32_t addr, uint32_t data);
 
-    void writebits(uint addr, uint hbit, uint lbit, uint value);
+    void writebits(uint32_t addr, uint32_t hbit, uint32_t lbit, uint32_t value);
 
     //---
     // Threads
 
+    [[noreturn]]
     void transactor();
 
+    [[noreturn]]
     void monitor();
 
     SC_CTOR(cpu_if) : bus_start(0), bus_done(0) {

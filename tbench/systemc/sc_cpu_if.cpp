@@ -69,7 +69,7 @@ void cpu_if::set_interrupt_mask(cpu_if::intId intr, bool value) {
     writebits(cpu_if::CPUREG_INT_MASK, intr, intr, value);
 }
 
-void cpu_if::enable_all_interrupts(void) {
+void cpu_if::enable_all_interrupts() {
 
     write(cpu_if::CPUREG_INT_MASK, 0xffffffff);
 }
@@ -83,9 +83,9 @@ void cpu_if::get_rmon_stats(rmonStats_t *rmon_stats) {
     rmon_stats->rx_pkt_cnt = read(cpu_if::CPUREG_STATSRXPKTS);
 }
 
-uint cpu_if::read(uint addr) {
+uint32_t cpu_if::read(uint32_t addr) {
 
-    uint data;
+    uint32_t data;
 
     //--
     // Wait for bus to be free, lock it, start transaction
@@ -110,7 +110,7 @@ uint cpu_if::read(uint addr) {
     return data;
 }
 
-void cpu_if::write(uint addr, uint data) {
+void cpu_if::write(uint32_t addr, uint32_t data) {
 
     //--
     // Wait for bus to be free, lock it, start transaction
@@ -133,10 +133,10 @@ void cpu_if::write(uint addr, uint data) {
     bus_lock.unlock();
 }
 
-void cpu_if::writebits(uint addr, uint hbit, uint lbit, uint value) {
+void cpu_if::writebits(uint32_t addr, uint32_t hbit, uint32_t lbit, uint32_t value) {
 
-    uint data;
-    uint mask;
+    uint32_t data;
+    uint32_t mask;
 
     mask = ~((0xffffffff << lbit) & (0xffffffff >> (31 - lbit)));
 
@@ -146,8 +146,8 @@ void cpu_if::writebits(uint addr, uint hbit, uint lbit, uint value) {
     write(addr, data);
 }
 
+[[noreturn]]
 void cpu_if::transactor() {
-
 
     while (true) {
 
@@ -215,9 +215,10 @@ void cpu_if::transactor() {
     }
 }
 
+[[noreturn]]
 void cpu_if::monitor() {
 
-    uint data;
+    uint32_t data;
 
     wait();
 

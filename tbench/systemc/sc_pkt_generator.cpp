@@ -54,7 +54,6 @@ void pkt_generator::connect_fifo(sc_fifo<packet_t *> *fifo) {
     tx_fifo = fifo;
 }
 
-
 void pkt_generator::gen_packet() {
 
     int len = 0;

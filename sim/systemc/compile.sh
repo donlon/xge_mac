@@ -3,7 +3,7 @@ clear
 
 verilator --trace -f verilator.cmd
 
-cd obj_dir
+cd obj_dir || exit
 
 make -f Vxge_mac.mk Vxge_mac__ALL.a
 

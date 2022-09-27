@@ -60,6 +60,7 @@ void pkt_if::connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid) {
     sb_id = sid;
 }
 
+[[noreturn]]
 void pkt_if::transmit() {
 
     packet_t *pkt;
@@ -122,6 +123,7 @@ void pkt_if::transmit() {
 };
 
 
+[[noreturn]]
 void pkt_if::receive() {
 
     packet_t *pkt;

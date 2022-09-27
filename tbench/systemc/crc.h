@@ -13,6 +13,10 @@
 
 /* based on implementation by Finn Yannick Jacobs. */
 
-void chksum_crc32gentab ();
-u_int32_t chksum_crc32 (sc_uint<8> *block, unsigned int length);
+#include <cstdint>
+
+void chksum_crc32gentab();
+
+uint32_t chksum_crc32(sc_uint<8> *block, unsigned int length);
+
 //extern u_int32_t crc_tab[256];

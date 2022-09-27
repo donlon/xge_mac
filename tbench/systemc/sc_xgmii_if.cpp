@@ -60,6 +60,7 @@ void xgmii_if::connect_scoreboard(scoreboard *sbptr, scoreboard::sbSourceId sid)
     sb_id = sid;
 }
 
+[[noreturn]]
 void xgmii_if::transmit() {
 
     packet_t *pkt;
@@ -261,7 +262,7 @@ void xgmii_if::transmit() {
         }
         if (inject_noise) {
             for (count = 0; count < 10000; count += 2) {
-                i = 2 * (random() % (sizeof(noise) / 16));
+                i = 2 * (rand() % (sizeof(noise) / 16));
                 cout << "NOISE: " << hex << noise[i] << " " << noise[i + 1] << dec << endl;
                 xgmii_rxd = noise[i + 1];
                 xgmii_rxc = noise[i];
@@ -283,6 +284,7 @@ void xgmii_if::transmit() {
 };
 
 
+[[noreturn]]
 void xgmii_if::receive() {
 
     packet_t *pkt;
@@ -326,7 +328,7 @@ void xgmii_if::receive() {
                     cout << "ERROR: IDLE character " << hex << rxd << " " << rxc << dec << lane << endl;
                     sc_stop();
                 }
-            };
+            }
 
             ifgcnt++;
 
@@ -433,9 +435,9 @@ void xgmii_if::receive() {
         sb->notify_packet_rx(sb_id, pkt);
 
     }
-};
+}
 
-
+[[noreturn]]
 void xgmii_if::monitor() {
 
     sc_uint<64> rxd;
@@ -499,4 +501,4 @@ void xgmii_if::monitor() {
 
         wait();
     }
-};
+}
