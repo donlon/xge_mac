@@ -12,13 +12,6 @@
  * $LastChangedBy$
  */
 
-`include "../../verification/include.sv"
-`include "../../verification/packet.sv"
-`include "../../verification/driver.sv"
-`include "../../verification/monitor.sv"
-`include "../../verification/scoreboard.sv"
-`include "../../verification/env.sv"
-
 /**
  * Testcase representing loopback scenario.
  * The testcase sets proper environment variable for design to work in loopback mode
@@ -32,7 +25,7 @@ program testcase (	macCoreInterface	driverTestInterface,
 			macCoreInterface	monitorTestInterface
 			);
 
-   env envLoopBack;
+   xge_mac_pkg::env envLoopBack;
    int noOfPackets;
    int lengthOfFrame;
    
