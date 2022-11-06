@@ -4,7 +4,7 @@ default: Vxge_mac__ALL.a
 
 # Constants...
 PERL = perl
-#VERILATOR_ROOT = /opt/verilator-3.656
+VERILATOR_ROOT ?= /usr/share/verilator
 #SYSTEMPERL = /opt/SystemPerl-1.282
 
 # Switches...
@@ -22,6 +22,7 @@ VM_USER_CLASSES = \
 VM_USER_DIR = \
 
 
+CPPFLAGS += -DVERILATOR
 CPPFLAGS += -I..
 CPPFLAGS += -I.
 CPPFLAGS += -I$(SYSTEMC)/include

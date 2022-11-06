@@ -275,7 +275,6 @@ module_top::module_top(sc_core::sc_module_name) {
 
     //==========
     // Testcases
-
     tc.connect_testbench(&tb);
 
     SC_THREAD(sim_thread);
@@ -289,7 +288,7 @@ SC_MODULE_EXPORT(module_top);
 
 int sc_main(int argc, char *argv[]) {
     module_top top("top");
-    sc_start(-1);
+    sc_start();
     return 0;
 }
 

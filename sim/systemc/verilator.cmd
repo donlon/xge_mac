@@ -1,4 +1,3 @@
-
 --sc
 --trace
 ../../rtl/verilog/xge_mac.v
